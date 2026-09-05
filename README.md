@@ -1,0 +1,1 @@
+# fornada_estrategica
