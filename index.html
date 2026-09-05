@@ -5,292 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fornada Estratégica — Simulador de Produção por Lote</title>
   <style>
-    :root{
-      --bg:#16110d; --panel:#33251c; --panel2:#463225; --panel3:#241912;
-      --ink:#fff7e6; --muted:#e8cfaa; --line:#8d6747; --dark:#080503;
-      --accent:#ffbf4d; --good:#75e39a; --bad:#ff7171; --warn:#ffd166; --blue:#84c7ff;
-      --flour:#fff2cc; --sweet:#e9a6d3; --bread:#d8913a;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;color:var(--ink);font-family:"Courier New",monospace;background:radial-gradient(circle at top,#5a3b22 0,#24170f 48%,#100b08 100%)}
-    .screen{max-width:1440px;margin:0 auto;padding:14px}
-    .titlebar{display:flex;justify-content:space-between;gap:12px;align-items:center;background:linear-gradient(#ffd88a,#cf7d2a);color:#2a1504;border:4px solid var(--dark);border-radius:14px;box-shadow:0 7px 0 var(--dark);padding:14px;margin-bottom:14px}
-    h1{margin:0;font-size:clamp(22px,3vw,38px);letter-spacing:.4px;text-shadow:1px 1px #fff1c9}.subtitle{font-size:12px;max-width:660px;text-align:right;line-height:1.35}
-    .grid{display:grid;gap:12px}.top-grid{grid-template-columns:1.05fr .95fr}.decision-grid{grid-template-columns:.95fr 1.05fr}.three{grid-template-columns:repeat(3,1fr)}.two{grid-template-columns:repeat(2,1fr)}
-    .panel,.card,.modal{background:var(--panel);border:3px solid var(--dark);box-shadow:0 4px 0 var(--dark);border-radius:12px;padding:12px}.panel h2{margin:0 0 9px;color:var(--accent);font-size:17px;border-bottom:2px dashed var(--line);padding-bottom:6px}.panel h3{margin:0 0 7px;color:#fff;font-size:14px}.tiny{font-size:11px;color:var(--muted);line-height:1.35}.hint{font-size:12px;color:#fff5c8;line-height:1.4;margin:6px 0}
-    .scenario{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}.stat{background:var(--panel2);border:2px solid var(--dark);border-radius:9px;padding:8px;min-height:60px}.label{font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:.3px}.value{font-weight:bold;font-size:17px;margin-top:4px}.value.small{font-size:14px;line-height:1.2}
-    button{font-family:"Courier New",monospace;font-weight:bold;cursor:pointer;border:3px solid var(--dark);background:#fff6df;color:#23160a;border-radius:9px;padding:9px 10px;box-shadow:0 3px 0 var(--dark);transition:.06s}.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.btn-row button{flex:1 1 150px}button:hover{filter:brightness(1.05)}button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--dark)}button:disabled{opacity:.5;cursor:not-allowed}.btn-primary{background:var(--good)}.btn-warn{background:var(--warn)}.btn-blue{background:var(--blue)}.btn-danger{background:var(--bad);color:#3b0404}.btn-selected{outline:4px solid #fff;background:var(--accent)}
+    :root{--bg:#15100c;--panel:#33251c;--panel2:#463225;--panel3:#241912;--ink:#fff7e6;--muted:#e8cfaa;--line:#8d6747;--dark:#080503;--accent:#ffbf4d;--good:#75e39a;--bad:#ff7171;--warn:#ffd166;--blue:#84c7ff;--sweet:#f1a9d8;--bread:#e0a04b}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;color:var(--ink);font-family:"Courier New",monospace;background:radial-gradient(circle at top,#5a3b22 0,#24170f 48%,#100b08 100%)} .screen{max-width:1480px;margin:0 auto;padding:14px}
+    .titlebar{display:flex;justify-content:space-between;gap:12px;align-items:center;background:linear-gradient(#ffd88a,#cf7d2a);color:#2a1504;border:4px solid var(--dark);border-radius:14px;box-shadow:0 7px 0 var(--dark);padding:14px;margin-bottom:14px} h1{margin:0;font-size:clamp(22px,3vw,38px);letter-spacing:.4px;text-shadow:1px 1px #fff1c9}.subtitle{font-size:12px;max-width:690px;text-align:right;line-height:1.35}.tiny{font-size:11px;color:var(--muted);line-height:1.35}.hint{font-size:12px;color:#fff5c8;line-height:1.4;margin:6px 0}
+    .grid{display:grid;gap:12px}.top-grid{grid-template-columns:1.05fr .95fr}.decision-grid{grid-template-columns:.9fr 1.1fr}.three{grid-template-columns:repeat(3,1fr)}.two{grid-template-columns:repeat(2,1fr)}.four{grid-template-columns:repeat(4,1fr)}
+    .panel,.card,.modal{background:var(--panel);border:3px solid var(--dark);box-shadow:0 4px 0 var(--dark);border-radius:12px;padding:12px}.panel h2{margin:0 0 9px;color:var(--accent);font-size:17px;border-bottom:2px dashed var(--line);padding-bottom:6px}.panel h3{margin:0 0 7px;color:#fff;font-size:14px}.scenario{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px}.stat{background:var(--panel2);border:2px solid var(--dark);border-radius:9px;padding:8px;min-height:60px}.label{font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:.3px}.value{font-weight:bold;font-size:17px;margin-top:4px}.value.small{font-size:14px;line-height:1.2}.ok{color:var(--good)!important;font-weight:bold}.bad{color:var(--bad)!important;font-weight:bold}.warn{color:var(--warn)!important;font-weight:bold}
+    button{font-family:"Courier New",monospace;font-weight:bold;cursor:pointer;border:3px solid var(--dark);background:#fff6df;color:#23160a;border-radius:9px;padding:9px 10px;box-shadow:0 3px 0 var(--dark);transition:.06s}.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.btn-row button{flex:1 1 150px}button:hover{filter:brightness(1.05)}button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--dark)}button:disabled{opacity:.45;cursor:not-allowed}.btn-primary{background:var(--good)}.btn-warn{background:var(--warn)}.btn-blue{background:var(--blue)}.btn-danger{background:var(--bad);color:#3b0404}.btn-purple{background:#d5b2ff;color:#1a0927}
     input,select{width:100%;font-family:"Courier New",monospace;border:3px solid var(--dark);border-radius:9px;padding:8px;background:#fff;color:#111;font-weight:bold}.field{margin-bottom:8px}.field label{display:block;font-size:10px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-    table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:2px solid rgba(0,0,0,.55);padding:7px;text-align:left}th{background:#1d140f;color:#ffe4a6}td{background:rgba(255,255,255,.06)}.num{text-align:right}.ok{color:var(--good);font-weight:bold}.bad{color:var(--bad);font-weight:bold}.warn{color:var(--warn);font-weight:bold}
-    .bread-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.bread-card{background:var(--panel2);border:3px solid var(--dark);border-radius:12px;padding:10px}.bread-card.frances{background:linear-gradient(135deg,#553416,#3b281a)}.bread-card.doce{background:linear-gradient(135deg,#55314d,#3b2339)}
-    .oven-wrap{display:grid;grid-template-columns:260px 1fr;gap:12px;align-items:stretch}.oven{height:260px;background:linear-gradient(#2b2b32,#121216);border:6px solid var(--dark);border-radius:18px;position:relative;box-shadow:inset 0 -18px 0 rgba(0,0,0,.3)}.oven:before{content:"";position:absolute;left:28px;right:28px;top:34px;bottom:44px;background:radial-gradient(circle at center,#ffcc66 0,#b55220 42%,#2a1510 80%);border:5px solid #090604;border-radius:14px;opacity:.75}.oven-door{position:absolute;left:36px;right:36px;bottom:25px;height:52px;border:4px solid #090604;border-radius:10px;background:rgba(255,255,255,.08)}.flame{position:absolute;left:50%;transform:translateX(-50%);bottom:82px;font-size:48px;animation:pulse .8s infinite alternate}@keyframes pulse{from{filter:brightness(.95);transform:translateX(-50%) scale(.96)}to{filter:brightness(1.25);transform:translateX(-50%) scale(1.05)}}
-    .progress-box{background:#15100c;border:3px inset #6d513c;border-radius:10px;padding:10px}.bar{height:22px;border:3px solid var(--dark);background:#241812;border-radius:12px;overflow:hidden}.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb84d,#fff07d)}.timeline{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.step{border:2px solid var(--dark);border-radius:999px;padding:5px 8px;background:#fff4d6;color:#221408;font-size:11px}.step.active{background:var(--good)}.step.setup{background:#d7e9ff}.step.done{opacity:.55}.step.skipped{background:#ffd0d0;text-decoration:line-through}
-    .sequence-list{display:flex;flex-wrap:wrap;gap:6px;min-height:42px;background:rgba(0,0,0,.17);border:2px dashed rgba(255,255,255,.2);border-radius:10px;padding:8px}.seq-pill{border:3px solid var(--dark);border-radius:999px;background:#fff4d6;color:#201104;padding:6px 8px;font-weight:bold;font-size:12px;cursor:pointer}.seq-pill.doce{background:#ffd5ef}.seq-pill.frances{background:#ffe0ad}.seq-pill:hover{filter:brightness(1.08)}
-    .alert{padding:9px;border:2px dashed rgba(255,255,255,.28);border-radius:9px;background:rgba(0,0,0,.18);font-size:12px;line-height:1.35;margin:7px 0}.diagnostic{font-size:13px;line-height:1.55}.footer-note{text-align:center;color:var(--muted);font-size:11px;margin-top:12px}.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:flex-start;justify-content:center;padding:18px;z-index:20;overflow:auto}.modal-wrap.show{display:flex}.modal{width:min(1120px,96vw)}.report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}.report-item{background:var(--panel2);border:2px solid var(--dark);border-radius:9px;padding:9px}.print-area{display:none}
-    @media(max-width:1000px){.top-grid,.decision-grid,.oven-wrap{grid-template-columns:1fr}.scenario,.report-grid{grid-template-columns:repeat(2,1fr)}.three{grid-template-columns:1fr}.subtitle{text-align:left}}
-    @media(max-width:620px){.scenario,.bread-cards,.two,.report-grid{grid-template-columns:1fr}.titlebar{flex-direction:column;align-items:flex-start}.screen{padding:8px}}
+    table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:2px solid rgba(0,0,0,.55);padding:7px;text-align:left;vertical-align:top}th{background:#1d140f;color:#ffe4a6}td{background:rgba(255,255,255,.06)}.num{text-align:right;white-space:nowrap}.bread-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.bread-card{background:var(--panel2);border:3px solid var(--dark);border-radius:12px;padding:10px}.bread-card.frances{background:linear-gradient(135deg,#553416,#3b281a)}.bread-card.doce{background:linear-gradient(135deg,#55314d,#3b2339)}
+    .sequence-list{display:flex;flex-wrap:wrap;gap:6px;min-height:42px;background:rgba(0,0,0,.17);border:2px dashed rgba(255,255,255,.2);border-radius:10px;padding:8px}.seq-pill{border:3px solid var(--dark);border-radius:999px;background:#fff4d6;color:#201104;padding:6px 8px;font-weight:bold;font-size:12px;cursor:pointer}.seq-pill.doce{background:#ffd5ef}.seq-pill.frances{background:#ffe0ad}.seq-pill.partial{outline:3px dashed #fff}.seq-pill:hover{filter:brightness(1.08)}
+    .oven-wrap{display:grid;grid-template-columns:285px 1fr;gap:12px;align-items:stretch}.oven{height:285px;background:linear-gradient(#2b2b32,#121216);border:6px solid var(--dark);border-radius:18px;position:relative;box-shadow:inset 0 -18px 0 rgba(0,0,0,.3)}.oven:before{content:"";position:absolute;left:28px;right:28px;top:54px;bottom:44px;background:radial-gradient(circle at center,#ffcc66 0,#b55220 42%,#2a1510 80%);border:5px solid #090604;border-radius:14px;opacity:.75}.oven-door{position:absolute;left:36px;right:36px;bottom:25px;height:52px;border:4px solid #090604;border-radius:10px;background:rgba(255,255,255,.08)}.flame{position:absolute;left:50%;transform:translateX(-50%);bottom:82px;font-size:48px;animation:pulse .8s infinite alternate}@keyframes pulse{from{filter:brightness(.95);transform:translateX(-50%) scale(.96)}to{filter:brightness(1.25);transform:translateX(-50%) scale(1.05)}}.temp-panel{position:absolute;left:18px;right:18px;top:14px;background:#0d1116;border:3px solid #060606;border-radius:10px;padding:7px;text-align:center;color:#d9f4ff;box-shadow:inset 0 0 12px rgba(132,199,255,.18)}.temp-big{font-size:28px;font-weight:bold;color:#fff}.temp-small{font-size:10px;color:#c5d9e9}
+    .progress-box{background:#15100c;border:3px inset #6d513c;border-radius:10px;padding:10px}.bar{height:22px;border:3px solid var(--dark);background:#241812;border-radius:12px;overflow:hidden}.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb84d,#fff07d)}.timeline{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.step{border:2px solid var(--dark);border-radius:999px;padding:5px 8px;background:#fff4d6;color:#221408;font-size:11px}.step.active{background:var(--good)}.step.setup{background:#d7e9ff}.step.done{opacity:.55}.alert{padding:9px;border:2px dashed rgba(255,255,255,.28);border-radius:9px;background:rgba(0,0,0,.18);font-size:12px;line-height:1.35;margin:7px 0}.diagnostic{font-size:13px;line-height:1.55}.footer-note{text-align:center;color:var(--muted);font-size:11px;margin-top:12px}.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:flex-start;justify-content:center;padding:18px;z-index:20;overflow:auto}.modal-wrap.show{display:flex}.modal{width:min(1160px,96vw)}.report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}.report-item{background:var(--panel2);border:2px solid var(--dark);border-radius:9px;padding:9px}.print-area{display:none}
+    @media(max-width:1150px){.scenario{grid-template-columns:repeat(3,1fr)}.top-grid,.decision-grid,.oven-wrap{grid-template-columns:1fr}.subtitle{text-align:left}.four{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.scenario,.bread-cards,.two,.three,.four,.report-grid{grid-template-columns:1fr}.titlebar{flex-direction:column;align-items:flex-start}.screen{padding:8px}}
     @media print{body{background:#fff!important;color:#000!important}.screen,.modal-wrap,.footer-note{display:none!important}.print-area{display:block!important;font-family:Arial,sans-serif!important;color:#000}.print-area h1{font-size:22px}.print-area h2{font-size:15px;border-bottom:1px solid #000;padding-bottom:4px}.print-area table{font-size:11px;border-collapse:collapse;width:100%;margin-bottom:10px}.print-area th,.print-area td{border:1px solid #333;padding:5px}.print-area .small{font-size:10px;color:#333}}
   </style>
 </head>
 <body>
 <div class="screen">
-  <div class="titlebar">
-    <div>
-      <h1>🍞 Fornada Estratégica</h1>
-      <div class="tiny" style="color:#3d2108">Simulador de produção por lote, capacidade, setup, MRP e margem de contribuição.</div>
-    </div>
-    <div class="subtitle">O forno é o recurso crítico. A decisão não é produzir mais: é usar melhor o gargalo.</div>
-  </div>
-
+  <div class="titlebar"><div><h1>🍞 Fornada Estratégica</h1><div class="tiny" style="color:#3d2108">Simulador de produção por lote, capacidade, setup, MRP e margem de contribuição.</div></div><div class="subtitle">O forno é o recurso crítico. A decisão não é produzir mais: é usar melhor o gargalo.</div></div>
   <section class="scenario">
     <div class="stat"><div class="label">Rodada</div><div class="value" id="roundValue">1</div></div>
     <div class="stat"><div class="label">Tempo útil do forno</div><div class="value" id="ovenTimeValue">205 min</div></div>
-    <div class="stat"><div class="label">Custo fixo</div><div class="value" id="fixedCostValue">R$ 180,00</div></div>
+    <div class="stat"><div class="label">Custo fixo da rodada</div><div class="value" id="fixedCostValue">R$ 0,00</div></div>
+    <div class="stat"><div class="label">Caixa acumulado</div><div class="value" id="cashValue">R$ 1.000,00</div></div>
     <div class="stat"><div class="label">Resultado estimado</div><div class="value" id="profitValue">R$ 0,00</div></div>
     <div class="stat"><div class="label">Situação do plano</div><div class="value small" id="planStatusValue">Monte o plano</div></div>
   </section>
-
   <div class="grid top-grid">
-    <section class="panel">
-      <h2>1. Cenário de mercado</h2>
-      <div class="hint" id="marketText">Rodada normal: demanda estável para pão francês e boa procura por pão doce.</div>
-      <div class="bread-cards">
-        <div class="bread-card frances">
-          <h3>🥖 Pão francês</h3>
-          <table>
-            <tr><th>Indicador</th><th class="num">Valor</th></tr>
-            <tr><td>Preço dado pelo mercado</td><td class="num" id="frPrice">R$ 1,20</td></tr>
-            <tr><td>Demanda prevista</td><td class="num" id="frDemand">230 un.</td></tr>
-            <tr><td>Fornada</td><td class="num" id="frBatch">100 un.</td></tr>
-            <tr><td>Tempo de forno</td><td class="num" id="frTime">25 min</td></tr>
-            <tr><td>Temperatura</td><td class="num">220°C</td></tr>
-            <tr><td>Custo variável</td><td class="num" id="frVar">R$ 0,45</td></tr>
-          </table>
-        </div>
-        <div class="bread-card doce">
-          <h3>🍞 Pão doce</h3>
-          <table>
-            <tr><th>Indicador</th><th class="num">Valor</th></tr>
-            <tr><td>Preço dado pelo mercado</td><td class="num" id="swPrice">R$ 4,50</td></tr>
-            <tr><td>Demanda prevista</td><td class="num" id="swDemand">85 un.</td></tr>
-            <tr><td>Fornada</td><td class="num" id="swBatch">50 un.</td></tr>
-            <tr><td>Tempo de forno</td><td class="num" id="swTime">35 min</td></tr>
-            <tr><td>Temperatura</td><td class="num">180°C</td></tr>
-            <tr><td>Custo variável</td><td class="num" id="swVar">R$ 1,80</td></tr>
-          </table>
-        </div>
-      </div>
-      <div class="alert"><b>Compra por lote:</b> farinha em sacos de 10 kg, fermento em pacotes de 500 g e embalagens em pacotes de 50 unidades. O MRP calcula a necessidade, mas a compra pode gerar sobra de material.</div>
-    </section>
-
-    <section class="panel">
-      <h2>2. Conceitos em jogo</h2>
-      <div class="diagnostic">
-        <b>Gestão da capacidade:</b> verificar se o plano cabe no tempo útil do forno.<br>
-        <b>Teoria das Restrições:</b> priorizar o produto que gera melhor margem por minuto do gargalo.<br>
-        <b>Produção por lote:</b> a fornada pode produzir mais que a demanda e gerar sobra.<br>
-        <b>Setup:</b> mudar temperatura consome tempo sem gerar produto.<br>
-        <b>MRP simplificado:</b> transformar o plano de fornadas em necessidade de insumos.<br>
-        <b>Margem de contribuição:</b> avaliar preço, custo variável e resultado operacional.
-      </div>
-      <div class="alert" id="bestProductText">Calcule o plano para ver qual produto usa melhor o forno.</div>
-      <div class="btn-row">
-        <button id="newRoundBtn" class="btn-blue">🔄 Nova rodada de mercado</button>
-        <button id="resetBtn">Limpar plano</button>
-      </div>
-    </section>
+    <section class="panel"><h2>1. Cenário de mercado</h2><div class="hint" id="marketText"></div><div class="bread-cards"><div class="bread-card frances"><h3>🥖 Pão francês</h3><table><tr><th>Indicador</th><th class="num">Valor</th></tr><tr><td>Preço dado pelo mercado</td><td class="num" id="frPrice"></td></tr><tr><td>Demanda prevista</td><td class="num" id="frDemand"></td></tr><tr><td>Fornada padrão</td><td class="num" id="frBatch"></td></tr><tr><td>Tempo de forno</td><td class="num" id="frTime"></td></tr><tr><td>Temperatura</td><td class="num">220°C</td></tr><tr><td>Custo variável padrão</td><td class="num" id="frVar"></td></tr></table></div><div class="bread-card doce"><h3>🍞 Pão doce</h3><table><tr><th>Indicador</th><th class="num">Valor</th></tr><tr><td>Preço dado pelo mercado</td><td class="num" id="swPrice"></td></tr><tr><td>Demanda prevista</td><td class="num" id="swDemand"></td></tr><tr><td>Fornada padrão</td><td class="num" id="swBatch"></td></tr><tr><td>Tempo de forno</td><td class="num" id="swTime"></td></tr><tr><td>Temperatura</td><td class="num">180°C</td></tr><tr><td>Custo variável padrão</td><td class="num" id="swVar"></td></tr></table></div></div><div class="alert"><b>Dica para análise:</b> quando o forno é gargalo, compare preço, custo variável, tamanho da fornada e tempo de forno. O simulador não informa a margem por minuto: esse cálculo fica para a turma.</div></section>
+    <section class="panel"><h2>2. Estoque e resultado anterior</h2><div id="previousBox" class="alert">Nenhuma rodada encerrada ainda.</div><h3>Estoque inicial desta rodada</h3><div id="stockBox"></div><div class="alert"><b>Custo fixo explicado:</b> representa a estrutura mínima da rodada: energia base, equipe, espaço e manutenção. Ele é fixo dentro da rodada, mas varia conforme o porte da demanda prevista.</div></section>
   </div>
-
   <div class="grid decision-grid" style="margin-top:12px">
-    <section class="panel">
-      <h2>3. Decisão do gestor</h2>
-      <div class="grid two">
-        <div>
-          <div class="field"><label for="frBatches">Fornadas de pão francês</label><input id="frBatches" type="number" min="0" step="1" value="0"></div>
-          <div class="btn-row"><button data-add="frances">+ Adicionar francês à sequência</button></div>
-        </div>
-        <div>
-          <div class="field"><label for="swBatches">Fornadas de pão doce</label><input id="swBatches" type="number" min="0" step="1" value="0"></div>
-          <div class="btn-row"><button data-add="doce">+ Adicionar doce à sequência</button></div>
-        </div>
-      </div>
-      <div class="hint">A quantidade de fornadas define o volume produzido. A sequência define o tempo de setup.</div>
-      <div class="sequence-list" id="sequenceList"></div>
-      <div class="btn-row">
-        <button id="autoSeqBtn" class="btn-warn">Organizar por temperatura</button>
-        <button id="clearSeqBtn" class="btn-danger">Limpar sequência</button>
-      </div>
-      <div class="alert">Clique nos itens da sequência para remover. Exemplo: Francês → Francês → Doce gera menos setup que Francês → Doce → Francês.</div>
-    </section>
-
-    <section class="panel">
-      <h2>4. Resultado calculado</h2>
-      <div id="resultTables"></div>
-      <div class="btn-row">
-        <button id="calcBtn" class="btn-primary">🧮 Calcular plano</button>
-        <button id="simulateBtn" class="btn-warn" disabled>▶ Simular forno</button>
-        <button id="reportBtn" class="btn-blue" disabled>📊 Ver relatório</button>
-      </div>
-    </section>
+    <section class="panel"><h2>3. Plano de fornadas e sequenciamento</h2><div class="btn-row"><button data-add="frances" class="btn-warn">+ Fornada completa de francês</button><button data-add="doce" class="btn-purple">+ Fornada completa de doce</button></div><div class="btn-row"><button id="authorizePartialBtn" class="btn-blue">🔐 Autorizar produção parcial</button><button id="clearSeqBtn">Limpar sequência</button></div><div id="partialBox" class="alert" style="display:none"><b>Produção parcial autorizada para esta rodada.</b><div class="grid two" style="margin-top:8px"><div class="field"><label>Produto</label><select id="partialProduct"><option value="frances">Pão francês</option><option value="doce">Pão doce</option></select></div><div class="field"><label>Quantidade parcial</label><input id="partialQty" type="number" min="1" value="30"></div></div><button id="addPartialBtn" class="btn-warn">Adicionar produção parcial</button><div class="tiny">A produção parcial tem custo variável 50% maior, custo de ajuste e tempo mínimo de 80% da fornada completa.</div></div><div class="sequence-list" id="sequenceList"></div><div id="planMessage" class="alert">Monte a sequência. O sistema limitará o plano ao tempo útil diário do forno.</div></section>
+    <section class="panel"><h2>4. Planejamento de materiais — MRP</h2><div class="hint">Depois de montar o plano, escolha quantos lotes comprar. Se faltar material, a simulação não será liberada.</div><div id="mrpTable"></div></section>
   </div>
-
-  <section class="panel" style="margin-top:12px">
-    <h2>5. Simulação visual do forno</h2>
-    <div class="oven-wrap">
-      <div class="oven"><div class="flame">🔥</div><div class="oven-door"></div></div>
-      <div class="progress-box">
-        <div class="label">Etapa atual</div>
-        <div class="value" id="simStage">Aguardando simulação</div>
-        <div class="tiny" id="simDetail">1 minuto real da operação equivale a 1 segundo na animação.</div>
-        <div class="bar" style="margin-top:12px"><span id="simProgress"></span></div>
-        <div class="timeline" id="timeline"></div>
-      </div>
-    </div>
-  </section>
-
+  <div class="grid top-grid" style="margin-top:12px">
+    <section class="panel"><h2>5. Resultado estimado do plano</h2><div id="resultTables"></div><div class="btn-row"><button id="simulateBtn" class="btn-primary" disabled>▶ Simular produção</button><button id="reportBtn" class="btn-blue" disabled>📄 Ver relatório</button><button id="newRoundBtn" class="btn-warn" disabled>↪ Nova rodada</button></div></section>
+    <section class="panel"><h2>6. Visualização do processo</h2><div class="oven-wrap"><div class="oven"><div class="temp-panel"><div class="temp-small">Temperatura atual</div><div class="temp-big" id="ovenTemp">--°C</div><div class="temp-small" id="ovenTarget">Alvo: --°C</div></div><div class="flame">🔥</div><div class="oven-door"></div></div><div><div class="progress-box"><div class="label">Estado do forno</div><div class="value small" id="simStage">Aguardando simulação</div><div class="tiny" id="simDetail">1 minuto real da operação equivale a 1 segundo na animação.</div><div class="bar" style="margin-top:8px"><span id="simProgress"></span></div></div><div class="timeline" id="timeline"></div><div id="leftoverDecision" class="alert" style="display:none"><b>Destino das sobras:</b><br>Antes do relatório, defina o que será feito com os pães não vendidos.<div class="btn-row"><button id="discardBtn" class="btn-danger">Descartar sobras</button><button id="crumbBtn" class="btn-primary">Transformar em farinha de rosca</button></div><div class="tiny">A farinha de rosca gera ganho simbólico pequeno e não substitui um bom planejamento.</div></div></div></div></section>
+  </div>
   <div class="footer-note">Sistema desenvolvido para a disciplina Gestão de Operações e Serviços, Professor Me. Luan Sodré da UNIVALE.</div>
 </div>
-
-<div class="modal-wrap" id="reportModal">
-  <div class="modal">
-    <h2>Relatório gerencial — Fornada Estratégica</h2>
-    <div class="report-grid" id="reportGrid"></div>
-    <div class="panel"><h2>Diagnóstico</h2><div class="diagnostic" id="diagnosticText"></div></div>
-    <div class="panel"><h2>MRP simplificado e compras por lote</h2><div id="mrpReport"></div></div>
-    <div class="btn-row"><button id="printBtn" class="btn-blue">🖨 Imprimir / salvar PDF</button><button id="closeReportBtn">Fechar</button></div>
-  </div>
-</div>
+<div class="modal-wrap" id="authModal"><div class="modal" style="max-width:620px"><h2>Autorização gerencial</h2><p class="diagnostic">Produção parcial é exceção. Ela reduz sobras, mas aumenta custo unitário, gera custo de ajuste e usa o forno de forma menos eficiente.</p><div class="field"><label>Senha gerencial</label><input id="authPassword" type="password" placeholder="Digite a senha"></div><div id="authMsg" class="tiny"></div><div class="btn-row"><button id="confirmAuthBtn" class="btn-primary">Autorizar</button><button id="closeAuthBtn">Cancelar</button></div></div></div>
+<div class="modal-wrap" id="reportModal"><div class="modal"><h2>Relatório gerencial da rodada</h2><div class="report-grid" id="reportGrid"></div><div class="grid two"><section class="panel"><h2>DRE simplificada</h2><div id="dreBox"></div></section><section class="panel"><h2>Feedbacks da disciplina</h2><div id="diagnosticText" class="diagnostic"></div></section></div><section class="panel" style="margin-top:12px"><h2>MRP e estoque</h2><div id="mrpReport"></div></section><div class="btn-row" style="margin-top:14px"><button id="printBtn" class="btn-blue">🖨 Imprimir / salvar PDF</button><button id="closeReportBtn">Fechar</button></div></div></div>
 <div id="printArea" class="print-area"></div>
-
 <script>
-(() => {
-  const PRODUCTS = {
-    frances:{label:"Pão francês", emoji:"🥖", price:1.20, demand:230, batch:100, bake:25, temp:220, varCost:.45, flour:.08, yeast:3, pack:1},
-    doce:{label:"Pão doce", emoji:"🍞", price:4.50, demand:85, batch:50, bake:35, temp:180, varCost:1.80, flour:.12, yeast:5, pack:1}
-  };
-  const scenarios = [
-    {name:"Mercado normal",text:"Rodada normal: demanda estável para pão francês e boa procura por pão doce.",fr:{price:1.20,demand:230},sw:{price:4.50,demand:85}},
-    {name:"Café da manhã forte",text:"Alta procura no café da manhã: o pão francês cresce, mas o pão doce mantém boa margem.",fr:{price:1.28,demand:280},sw:{price:4.45,demand:70}},
-    {name:"Pão doce valorizado",text:"Encomendas e vitrine valorizam o pão doce. O forno pode ficar disputado pelo produto de maior margem.",fr:{price:1.18,demand:210},sw:{price:4.90,demand:120}},
-    {name:"Concorrência no bairro",text:"Concorrência reduz o preço médio do pão francês. Produzir volume pode não ser a melhor decisão.",fr:{price:1.10,demand:260},sw:{price:4.35,demand:90}},
-    {name:"Demanda irregular",text:"Demanda não fecha com as fornadas: produzir pouco perde venda; produzir muito gera sobra.",fr:{price:1.25,demand:245},sw:{price:4.70,demand:65}}
-  ];
-  const state = {round:1,scenarioIndex:0,fixedCost:180,shiftMinutes:240,utilization:.90,efficiency:.95,setupMinutes:15,sequence:[],last:null,simulating:false};
-  const $ = id => document.getElementById(id);
-  const money = v => Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-  const pct = v => `${Number(v||0).toLocaleString("pt-BR",{maximumFractionDigits:1})}%`;
-  const ceilLot = (need,lot)=>Math.ceil(Math.max(0,need)/lot)*lot;
-  function usefulOvenTime(){ return state.shiftMinutes*state.utilization*state.efficiency; }
-  function applyScenario(){
-    const s=scenarios[state.scenarioIndex]; PRODUCTS.frances.price=s.fr.price; PRODUCTS.frances.demand=s.fr.demand; PRODUCTS.doce.price=s.sw.price; PRODUCTS.doce.demand=s.sw.demand;
-    $("roundValue").textContent=state.round; $("marketText").textContent=`${s.name}: ${s.text}`; $("ovenTimeValue").textContent=`${Math.round(usefulOvenTime())} min`; $("fixedCostValue").textContent=money(state.fixedCost);
-    $("frPrice").textContent=money(PRODUCTS.frances.price); $("frDemand").textContent=`${PRODUCTS.frances.demand} un.`; $("frBatch").textContent=`${PRODUCTS.frances.batch} un.`; $("frTime").textContent=`${PRODUCTS.frances.bake} min`; $("frVar").textContent=money(PRODUCTS.frances.varCost);
-    $("swPrice").textContent=money(PRODUCTS.doce.price); $("swDemand").textContent=`${PRODUCTS.doce.demand} un.`; $("swBatch").textContent=`${PRODUCTS.doce.batch} un.`; $("swTime").textContent=`${PRODUCTS.doce.bake} min`; $("swVar").textContent=money(PRODUCTS.doce.varCost);
-    updateBestProduct(); renderSequence(); calculate(false);
-  }
-  function updateBestProduct(){
-    const rows=Object.entries(PRODUCTS).map(([k,p])=>{ const mc=p.price-p.varCost; const batchMc=mc*p.batch; const perMin=batchMc/p.bake; return {k,p,mc,batchMc,perMin}; }).sort((a,b)=>b.perMin-a.perMin);
-    $("bestProductText").innerHTML=`<b>Margem por minuto do forno:</b> ${rows[0].p.emoji} ${rows[0].p.label} gera ${money(rows[0].perMin)}/min; ${rows[1].p.emoji} ${rows[1].p.label} gera ${money(rows[1].perMin)}/min. Quando o forno é gargalo, esse indicador ajuda a priorizar.`;
-  }
-  function desiredCounts(){ return {frances:Math.max(0,parseInt($("frBatches").value||0,10)), doce:Math.max(0,parseInt($("swBatches").value||0,10))}; }
-  function syncSequenceToCounts(){
-    const counts=desiredCounts(); const current={frances:state.sequence.filter(x=>x==="frances").length,doce:state.sequence.filter(x=>x==="doce").length};
-    ["frances","doce"].forEach(k=>{ while(current[k]<counts[k]){state.sequence.push(k); current[k]++} while(current[k]>counts[k]){ const idx=state.sequence.lastIndexOf(k); if(idx>=0){state.sequence.splice(idx,1); current[k]--} else break } });
-  }
-  function renderSequence(){
-    if(!state.sequence.length){ $("sequenceList").innerHTML='<span class="tiny">Nenhuma fornada na sequência.</span>'; return; }
-    $("sequenceList").innerHTML=state.sequence.map((k,i)=>`<span class="seq-pill ${k}" data-remove="${i}">${PRODUCTS[k].emoji} ${PRODUCTS[k].label}</span>`).join("");
-  }
-  function timeCalc(seq){
-    let bake=0, setup=0, prev=null, steps=[];
-    seq.forEach((k,i)=>{ const p=PRODUCTS[k]; if(prev && PRODUCTS[prev].temp!==p.temp){ setup+=state.setupMinutes; steps.push({type:"setup",label:`Setup ${PRODUCTS[prev].temp}°C → ${p.temp}°C`,minutes:state.setupMinutes}); } bake+=p.bake; steps.push({type:k,label:`${p.emoji} ${p.label} — fornada ${i+1}`,minutes:p.bake}); prev=k; });
-    return {bake,setup,total:bake+setup,steps};
-  }
-  function calcMRP(produced){
-    const need={flour:0,yeast:0,pack:0};
-    Object.entries(produced).forEach(([k,q])=>{ const p=PRODUCTS[k]; need.flour += q*p.flour; need.yeast += q*p.yeast; need.pack += q*p.pack; });
-    const buy={flour:ceilLot(need.flour,10), yeast:ceilLot(need.yeast,500), pack:ceilLot(need.pack,50)};
-    const cost={flour:buy.flour*3.2, yeast:(buy.yeast/500)*12, pack:buy.pack*.12};
-    return {need,buy,cost,total:cost.flour+cost.yeast+cost.pack};
-  }
-  function calculate(show=true){
-    syncSequenceToCounts(); renderSequence();
-    const counts=desiredCounts(); const tc=timeCalc(state.sequence); const useful=usefulOvenTime();
-    const feasible=tc.total<=useful;
-    const produced={frances:counts.frances*PRODUCTS.frances.batch,doce:counts.doce*PRODUCTS.doce.batch};
-    const sold={}, lost={}, leftover={}, revenue={}, variable={}, margin={};
-    Object.keys(PRODUCTS).forEach(k=>{ const p=PRODUCTS[k]; sold[k]=Math.min(p.demand,produced[k]); leftover[k]=Math.max(0,produced[k]-sold[k]); lost[k]=Math.max(0,p.demand-sold[k]); revenue[k]=sold[k]*p.price; variable[k]=produced[k]*p.varCost; margin[k]=(p.price-p.varCost)*sold[k]; });
-    const mrp=calcMRP(produced);
-    const totalRevenue=revenue.frances+revenue.doce; const totalVariable=variable.frances+variable.doce; const contribution=margin.frances+margin.doce; const result=totalRevenue-totalVariable-state.fixedCost; const utilization=tc.total/useful*100; const lostRevenue=lost.frances*PRODUCTS.frances.price+lost.doce*PRODUCTS.doce.price;
-    const last={counts,tc,useful,feasible,produced,sold,lost,leftover,revenue,variable,margin,mrp,totalRevenue,totalVariable,contribution,result,utilization,lostRevenue}; state.last=last;
-    $("profitValue").textContent=money(result); $("profitValue").className=`value ${result>=0?"ok":"bad"}`; $("planStatusValue").textContent=feasible?"Viável":"Inviável"; $("planStatusValue").className=`value small ${feasible?"ok":"bad"}`;
-    $("simulateBtn").disabled=!state.sequence.length||!feasible; $("reportBtn").disabled=!state.sequence.length;
-    $("resultTables").innerHTML=resultHTML(last);
-    if(show) renderTimeline(false);
-    return last;
-  }
-  function resultHTML(r){
-    const rows=Object.keys(PRODUCTS).map(k=>{ const p=PRODUCTS[k]; return `<tr><td>${p.emoji} ${p.label}</td><td class="num">${p.demand}</td><td class="num">${r.produced[k]}</td><td class="num">${r.sold[k]}</td><td class="num ${r.leftover[k]>0?'warn':''}">${r.leftover[k]}</td><td class="num ${r.lost[k]>0?'bad':''}">${r.lost[k]}</td><td class="num">${money(r.revenue[k])}</td></tr>` }).join("");
-    const capClass=r.feasible?"ok":"bad";
-    return `<table><tr><th>Produto</th><th class="num">Demanda</th><th class="num">Produzido</th><th class="num">Vendido</th><th class="num">Sobra</th><th class="num">Perdido</th><th class="num">Receita</th></tr>${rows}</table>
-    <div class="grid three" style="margin-top:10px"><div class="stat"><div class="label">Tempo de fornadas</div><div class="value">${r.tc.bake} min</div></div><div class="stat"><div class="label">Tempo de setup</div><div class="value ${r.tc.setup>0?'warn':''}">${r.tc.setup} min</div></div><div class="stat"><div class="label">Tempo total / útil</div><div class="value ${capClass}">${r.tc.total} / ${Math.round(r.useful)} min</div></div></div>
-    <table style="margin-top:10px"><tr><th>Resultado econômico</th><th class="num">Valor</th></tr><tr><td>Receita</td><td class="num">${money(r.totalRevenue)}</td></tr><tr><td>(-) Custo variável da produção</td><td class="num">${money(r.totalVariable)}</td></tr><tr><td>(-) Custo fixo do turno</td><td class="num">${money(state.fixedCost)}</td></tr><tr><td><b>Resultado operacional</b></td><td class="num ${r.result>=0?'ok':'bad'}"><b>${money(r.result)}</b></td></tr><tr><td>Utilização do forno planejada</td><td class="num">${pct(r.utilization)}</td></tr></table>`;
-  }
-  function renderTimeline(activeIndex=-1){
-    const r=state.last||calculate(false); if(!r || !r.tc.steps.length){ $("timeline").innerHTML='<span class="tiny">Monte e calcule um plano para ver a linha do tempo.</span>'; return; }
-    $("timeline").innerHTML=r.tc.steps.map((s,i)=>`<span class="step ${s.type==='setup'?'setup':''} ${i<activeIndex?'done':''} ${i===activeIndex?'active':''}">${s.label} · ${s.minutes}min</span>`).join("");
-  }
-  async function simulate(){
-    const r=calculate(false); if(!r.feasible || !r.tc.steps.length) return; state.simulating=true; $("simulateBtn").disabled=true; $("calcBtn").disabled=true;
-    for(let i=0;i<r.tc.steps.length;i++){
-      const step=r.tc.steps[i]; renderTimeline(i); $("simStage").textContent=step.label; $("simDetail").textContent=`Tempo operacional: ${step.minutes} min | Simulação: ${step.minutes} s.`;
-      await animateProgress(step.minutes);
-    }
-    renderTimeline(r.tc.steps.length); $("simStage").textContent="Plano concluído"; $("simDetail").textContent=`Tempo total: ${r.tc.total} min. Resultado estimado: ${money(r.result)}.`; $("simProgress").style.width="100%";
-    state.simulating=false; $("simulateBtn").disabled=false; $("calcBtn").disabled=false; $("reportBtn").disabled=false;
-  }
-  function animateProgress(seconds){ return new Promise(resolve=>{ let elapsed=0; $("simProgress").style.width="0%"; const t=setInterval(()=>{ elapsed+=.1; $("simProgress").style.width=`${Math.min(100,elapsed/seconds*100)}%`; if(elapsed>=seconds){clearInterval(t); resolve();}},100); }); }
-  function diagnostic(r){
-    const best=Object.entries(PRODUCTS).map(([k,p])=>({k,p,perMin:((p.price-p.varCost)*p.batch)/p.bake})).sort((a,b)=>b.perMin-a.perMin)[0];
-    const msgs=[];
-    msgs.push(r.feasible?"O plano cabe dentro da capacidade útil do forno." : "O plano ultrapassa a capacidade útil do forno. É preciso reduzir fornadas ou melhorar o sequenciamento.");
-    if(r.tc.setup>state.setupMinutes) msgs.push("A sequência gerou muitos setups. Agrupar produtos por temperatura pode liberar tempo do recurso crítico.");
-    else if(r.tc.setup===state.setupMinutes) msgs.push("Houve apenas uma mudança de temperatura. A sequência está razoavelmente organizada.");
-    else msgs.push("Não houve troca de temperatura. O plano não perdeu tempo com setup.");
-    if(r.lost[best.k]>0) msgs.push(`Há demanda perdida no produto com maior margem por minuto do forno: ${best.p.label}. Pela Teoria das Restrições, vale revisar a prioridade.`);
-    if(r.leftover.frances+r.leftover.doce>0) msgs.push("A produção por lote gerou sobra. A sobra consome custo variável, mesmo quando não gera receita.");
-    if(r.result<0) msgs.push("O resultado operacional ficou negativo. A margem das vendas não cobriu custos variáveis e custo fixo.");
-    else msgs.push("O resultado operacional ficou positivo, mas ainda deve ser avaliado junto com sobra, demanda perdida e uso do forno.");
-    return msgs.map(m=>`<p>${m}</p>`).join("");
-  }
-  function mrpHTML(r){
-    return `<table><tr><th>Insumo</th><th class="num">Necessário</th><th class="num">Lote de compra</th><th class="num">Comprar</th><th class="num">Sobra após compra</th></tr>
-    <tr><td>Farinha</td><td class="num">${r.mrp.need.flour.toFixed(1).replace('.',',')} kg</td><td class="num">10 kg</td><td class="num">${r.mrp.buy.flour.toFixed(1).replace('.',',')} kg</td><td class="num">${(r.mrp.buy.flour-r.mrp.need.flour).toFixed(1).replace('.',',')} kg</td></tr>
-    <tr><td>Fermento</td><td class="num">${Math.round(r.mrp.need.yeast)} g</td><td class="num">500 g</td><td class="num">${Math.round(r.mrp.buy.yeast)} g</td><td class="num">${Math.round(r.mrp.buy.yeast-r.mrp.need.yeast)} g</td></tr>
-    <tr><td>Embalagens</td><td class="num">${Math.round(r.mrp.need.pack)} un.</td><td class="num">50 un.</td><td class="num">${Math.round(r.mrp.buy.pack)} un.</td><td class="num">${Math.round(r.mrp.buy.pack-r.mrp.need.pack)} un.</td></tr></table>`;
-  }
-  function showReport(){
-    const r=calculate(false);
-    const items=[
-      ["Cenário",scenarios[state.scenarioIndex].name],["Plano",`${r.counts.frances} fornada(s) francês · ${r.counts.doce} fornada(s) doce`],["Tempo total",`${r.tc.total} min`],["Tempo de setup",`${r.tc.setup} min`],
-      ["Capacidade útil",`${Math.round(r.useful)} min`],["Situação",r.feasible?"Viável":"Inviável"],["Receita",money(r.totalRevenue)],["Custo variável",money(r.totalVariable)],["Custo fixo",money(state.fixedCost)],["Resultado",money(r.result)],["Demanda perdida",`${r.lost.frances+r.lost.doce} un.`],["Sobras",`${r.leftover.frances+r.leftover.doce} un.`]
-    ];
-    $("reportGrid").innerHTML=items.map(([l,v])=>`<div class="report-item"><div class="label">${l}</div><div class="value small">${v}</div></div>`).join("");
-    $("diagnosticText").innerHTML=diagnostic(r); $("mrpReport").innerHTML=mrpHTML(r); $("printArea").innerHTML=printHTML(r); $("reportModal").classList.add("show");
-  }
-  function printHTML(r){
-    return `<h1>Fornada Estratégica — Relatório Gerencial</h1><p class="small">Sistema desenvolvido para a disciplina Gestão de Operações e Serviços, Professor Me. Luan Sodré da UNIVALE.</p><h2>Resumo</h2><table><tr><td>Cenário</td><td>${scenarios[state.scenarioIndex].name}</td></tr><tr><td>Plano</td><td>${r.counts.frances} fornada(s) de pão francês; ${r.counts.doce} fornada(s) de pão doce</td></tr><tr><td>Sequência</td><td>${state.sequence.map(k=>PRODUCTS[k].label).join(' → ')||'Sem sequência'}</td></tr><tr><td>Tempo total</td><td>${r.tc.total} min</td></tr><tr><td>Capacidade útil</td><td>${Math.round(r.useful)} min</td></tr><tr><td>Resultado operacional</td><td>${money(r.result)}</td></tr></table><h2>Produção e vendas</h2>${resultHTML(r)}<h2>MRP simplificado</h2>${mrpHTML(r)}<h2>Diagnóstico</h2>${diagnostic(r)}`;
-  }
-  function resetPlan(){ state.sequence=[]; $("frBatches").value=0; $("swBatches").value=0; $("simStage").textContent="Aguardando simulação"; $("simDetail").textContent="1 minuto real da operação equivale a 1 segundo na animação."; $("simProgress").style.width="0%"; renderSequence(); calculate(false); renderTimeline(false); }
-  document.addEventListener("click", e=>{
-    const add=e.target.getAttribute && e.target.getAttribute("data-add"); if(add){ state.sequence.push(add); const counts=desiredCounts(); counts[add]++; $(add==="frances"?"frBatches":"swBatches").value=counts[add]; renderSequence(); calculate(false); }
-    const rem=e.target.getAttribute && e.target.getAttribute("data-remove"); if(rem!==null){ const k=state.sequence[Number(rem)]; state.sequence.splice(Number(rem),1); const inp=$(k==="frances"?"frBatches":"swBatches"); inp.value=Math.max(0,parseInt(inp.value||0,10)-1); renderSequence(); calculate(false); }
-  });
-  ["frBatches","swBatches"].forEach(id=>$(id).addEventListener("input",()=>calculate(false)));
-  $("autoSeqBtn").addEventListener("click",()=>{ const c=desiredCounts(); state.sequence=[...Array(c.frances).fill("frances"),...Array(c.doce).fill("doce")]; renderSequence(); calculate(true); });
-  $("clearSeqBtn").addEventListener("click",resetPlan); $("resetBtn").addEventListener("click",resetPlan); $("calcBtn").addEventListener("click",()=>calculate(true)); $("simulateBtn").addEventListener("click",simulate); $("reportBtn").addEventListener("click",showReport); $("closeReportBtn").addEventListener("click",()=>$("reportModal").classList.remove("show")); $("printBtn").addEventListener("click",()=>window.print());
-  $("newRoundBtn").addEventListener("click",()=>{ state.round++; state.scenarioIndex=(state.scenarioIndex+1)%scenarios.length; resetPlan(); applyScenario(); });
-  applyScenario(); renderTimeline(false);
+(()=>{
+  const PRODUCTS={frances:{emoji:"🥖",label:"Pão francês",batch:100,bake:25,temp:220,varCost:.45,flour:.08,yeast:2,pack:1},doce:{emoji:"🍞",label:"Pão doce",batch:50,bake:35,temp:180,varCost:1.80,flour:.06,yeast:3,filling:.08,pack:1}};
+  const LOTS={flour:{label:"Farinha",unit:"kg",lot:10,lotLabel:"saco de 10 kg",costPerLot:32},yeast:{label:"Fermento",unit:"g",lot:500,lotLabel:"pacote de 500 g",costPerLot:12},filling:{label:"Recheio doce",unit:"kg",lot:5,lotLabel:"balde de 5 kg",costPerLot:45},pack:{label:"Embalagens",unit:"un.",lot:50,lotLabel:"pacote com 50",costPerLot:6}};
+  const scenarios=[{name:"Mercado normal",text:"Demanda equilibrada e preços estáveis.",fr:{price:1.20,demand:230},sw:{price:4.50,demand:85}},{name:"Café da manhã aquecido",text:"A demanda do pão francês cresce e pressiona o forno.",fr:{price:1.25,demand:290},sw:{price:4.40,demand:70}},{name:"Pão doce valorizado",text:"O pão doce tem preço melhor, mas usa mais tempo de forno.",fr:{price:1.15,demand:210},sw:{price:4.95,demand:110}},{name:"Demanda irregular",text:"A procura não fecha exatamente com as fornadas, exigindo decisão sobre sobra ou perda de venda.",fr:{price:1.30,demand:255},sw:{price:4.70,demand:65}}];
+  const state={round:1,scenarioIndex:0,cash:1000,shiftMinutes:240,utilization:.90,efficiency:.95,setupMinutes:15,setupCost:8,partialAdjustmentCost:15,partialAuthorized:false,sequence:[],stock:{flour:20,yeast:1000,filling:8,pack:200},purchaseLots:{flour:0,yeast:0,filling:0,pack:0},last:null,lastClosed:null,simComplete:false,leftoverChoice:null,tempTimer:null};
+  const $=id=>document.getElementById(id); const money=v=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); const fmt=(v,d=1)=>Number(v||0).toLocaleString("pt-BR",{maximumFractionDigits:d}); const pct=v=>`${fmt(v,1)}%`; const usefulOvenTime=()=>state.shiftMinutes*state.utilization*state.efficiency; const totalDemand=()=>PRODUCTS.frances.demand+PRODUCTS.doce.demand;
+  function fixedCost(){const d=totalDemand(); if(d<=250)return 120; if(d<=380)return 180; if(d<=500)return 240; return 320;}
+  function applyScenario(){const s=scenarios[state.scenarioIndex]; PRODUCTS.frances.price=s.fr.price; PRODUCTS.frances.demand=s.fr.demand; PRODUCTS.doce.price=s.sw.price; PRODUCTS.doce.demand=s.sw.demand; state.fixedCost=fixedCost(); $("roundValue").textContent=state.round; $("marketText").textContent=`${s.name}: ${s.text}`; $("ovenTimeValue").textContent=`${Math.round(usefulOvenTime())} min`; $("fixedCostValue").textContent=money(state.fixedCost); $("cashValue").textContent=money(state.cash); $("frPrice").textContent=money(PRODUCTS.frances.price); $("frDemand").textContent=`${PRODUCTS.frances.demand} un.`; $("frBatch").textContent=`${PRODUCTS.frances.batch} un.`; $("frTime").textContent=`${PRODUCTS.frances.bake} min`; $("frVar").textContent=money(PRODUCTS.frances.varCost); $("swPrice").textContent=money(PRODUCTS.doce.price); $("swDemand").textContent=`${PRODUCTS.doce.demand} un.`; $("swBatch").textContent=`${PRODUCTS.doce.batch} un.`; $("swTime").textContent=`${PRODUCTS.doce.bake} min`; $("swVar").textContent=money(PRODUCTS.doce.varCost); renderPrevious(); renderStock(); calculate(); updateOvenTemp(null,true);}
+  function renderPrevious(){if(!state.lastClosed){$("previousBox").innerHTML="Nenhuma rodada encerrada ainda.";return;} const r=state.lastClosed; $("previousBox").innerHTML=`<b>Rodada anterior:</b><br>Receita: ${money(r.totalRevenue)} · Resultado operacional: <b class="${r.result>=0?'ok':'bad'}">${money(r.result)}</b><br>Sobras: ${r.leftoverTotal} un. · Demanda perdida: ${r.lostTotal} un. · Caixa final: ${money(state.cash)}`;}
+  function renderStock(){let h='<table><tr><th>Insumo</th><th class="num">Disponível</th></tr>'; Object.entries(LOTS).forEach(([k,l])=>h+=`<tr><td>${l.label}</td><td class="num">${fmt(state.stock[k],k==='yeast'||k==='pack'?0:1)} ${l.unit}</td></tr>`); h+='</table>'; $("stockBox").innerHTML=h;}
+  function cloneSeq(extra){return extra?[...state.sequence,extra]:[...state.sequence]}
+  function stepInfo(step){const p=PRODUCTS[step.product]; if(step.partial){return {qty:step.qty,bake:Math.ceil(p.bake*.80),temp:p.temp,varCost:p.varCost*1.5,adjust:state.partialAdjustmentCost,label:`${p.emoji} ${p.label} parcial (${step.qty} un.)`};} return {qty:p.batch,bake:p.bake,temp:p.temp,varCost:p.varCost,adjust:0,label:`${p.emoji} ${p.label} — fornada completa`};}
+  function timeCalc(seq){let bake=0,setup=0,prev=null,steps=[]; seq.forEach(step=>{const info=stepInfo(step); if(prev!==null&&prev!==info.temp){setup+=state.setupMinutes; steps.push({kind:"setup",label:`Setup ${prev}°C → ${info.temp}°C`,minutes:state.setupMinutes,tempFrom:prev,tempTo:info.temp});} bake+=info.bake; steps.push({kind:"bake",label:info.label,minutes:info.bake,temp:info.temp,product:step.product,qty:info.qty,partial:!!step.partial}); prev=info.temp;}); return {bake,setup,total:bake+setup,steps};}
+  function canAdd(step){const tc=timeCalc(cloneSeq(step)); if(tc.total>usefulOvenTime()+0.0001){showPlanMessage(`Não foi possível adicionar: o plano chegaria a ${tc.total} min e o limite útil do forno é ${Math.round(usefulOvenTime())} min.`,"bad");return false;} return true;}
+  function addStep(step){state.simComplete=false; state.leftoverChoice=null; $("leftoverDecision").style.display="none"; $("reportBtn").disabled=true; if(!canAdd(step))return; state.sequence.push(step); calculate();}
+  function renderSequence(){if(!state.sequence.length){$("sequenceList").innerHTML='<span class="tiny">Nenhuma fornada na sequência.</span>';return;} $("sequenceList").innerHTML=state.sequence.map((s,i)=>{const p=PRODUCTS[s.product]; return `<span class="seq-pill ${s.product} ${s.partial?'partial':''}" data-remove="${i}">${p.emoji} ${p.label}${s.partial?` parcial ${s.qty} un.`:' completa'}</span>`;}).join("");}
+  function requirements(){const need={flour:0,yeast:0,filling:0,pack:0}, produced={frances:0,doce:0}, variable={frances:0,doce:0}, partialAdjust=0, partialCount=0; state.sequence.forEach(st=>{const p=PRODUCTS[st.product], info=stepInfo(st); produced[st.product]+=info.qty; variable[st.product]+=info.qty*info.varCost; partialAdjust+=info.adjust; if(st.partial)partialCount++; need.flour+=info.qty*p.flour; need.yeast+=info.qty*p.yeast; need.pack+=info.qty*p.pack; need.filling+=info.qty*(p.filling||0);}); return {need,produced,variable,partialAdjust,partialCount};}
+  function purchaseQty(k){return (Number(state.purchaseLots[k])||0)*LOTS[k].lot;} function purchaseCost(){return Object.keys(LOTS).reduce((s,k)=>s+(Number(state.purchaseLots[k])||0)*LOTS[k].costPerLot,0);} function enoughMaterials(need){return Object.keys(LOTS).every(k=>(state.stock[k]+purchaseQty(k)+1e-9)>=need[k]);}
+  function renderMRP(req){let h='<table><tr><th>Insumo</th><th class="num">Necessidade bruta</th><th class="num">Estoque</th><th class="num">Necessidade líquida</th><th class="num">Lote</th><th class="num">Comprar lotes</th><th class="num">Situação</th></tr>'; Object.entries(LOTS).forEach(([k,l])=>{const need=req.need[k], stock=state.stock[k], net=Math.max(0,need-stock), bought=purchaseQty(k), ok=stock+bought>=need-1e-9; h+=`<tr><td>${l.label}</td><td class="num">${fmt(need,k==='yeast'||k==='pack'?0:1)} ${l.unit}</td><td class="num">${fmt(stock,k==='yeast'||k==='pack'?0:1)} ${l.unit}</td><td class="num">${fmt(net,k==='yeast'||k==='pack'?0:1)} ${l.unit}</td><td class="num">${l.lotLabel}<br>${money(l.costPerLot)}</td><td class="num"><input data-buy="${k}" type="number" min="0" value="${state.purchaseLots[k]}" style="width:72px"></td><td class="num ${ok?'ok':'bad'}">${ok?'OK':`Falta ${fmt(need-stock-bought,k==='yeast'||k==='pack'?0:1)} ${l.unit}`}</td></tr>`}); h+=`</table><div class="alert"><b>Compra planejada:</b> ${money(purchaseCost())}. A compra por lote pode gerar estoque excedente e capital parado.</div>`; $("mrpTable").innerHTML=h;}
+  function calculate(){renderSequence(); const req=requirements(), tc=timeCalc(state.sequence), feasible=tc.total<=usefulOvenTime(), materialOK=enoughMaterials(req.need); const sold={},leftover={},lost={},revenue={}; Object.keys(PRODUCTS).forEach(k=>{const p=PRODUCTS[k]; sold[k]=Math.min(p.demand,req.produced[k]); leftover[k]=Math.max(0,req.produced[k]-sold[k]); lost[k]=Math.max(0,p.demand-sold[k]); revenue[k]=sold[k]*p.price;}); const totalRevenue=revenue.frances+revenue.doce, totalVariable=req.variable.frances+req.variable.doce, setupCost=(tc.setup/state.setupMinutes)*state.setupCost || 0, result=totalRevenue-totalVariable-setupCost-req.partialAdjust-state.fixedCost, utilization=tc.total/usefulOvenTime()*100; const r={req,tc,feasible,materialOK,sold,leftover,lost,revenue,totalRevenue,totalVariable,setupCost,result,utilization,purchaseCost:purchaseCost(),leftoverTotal:leftover.frances+leftover.doce,lostTotal:lost.frances+lost.doce,partialAdjust:req.partialAdjust,partialCount:req.partialCount,reuseRevenue:0}; state.last=r; $("profitValue").textContent=money(result); $("profitValue").className=`value ${result>=0?'ok':'bad'}`; $("planStatusValue").textContent=!state.sequence.length?"Monte o plano":(feasible&&materialOK?"Pronto para simular":(!feasible?"Tempo excedido":"Falta material")); $("planStatusValue").className=`value small ${(feasible&&materialOK&&state.sequence.length)?'ok':'bad'}`; $("simulateBtn").disabled=!state.sequence.length||!feasible||!materialOK||state.simComplete; renderResult(r); renderMRP(req); renderTimeline(-1); return r;}
+  function renderResult(r){const rows=Object.keys(PRODUCTS).map(k=>{const p=PRODUCTS[k];return `<tr><td>${p.emoji} ${p.label}</td><td class="num">${p.demand}</td><td class="num">${r.req.produced[k]}</td><td class="num">${r.sold[k]}</td><td class="num ${r.leftover[k]>0?'warn':''}">${r.leftover[k]}</td><td class="num ${r.lost[k]>0?'bad':''}">${r.lost[k]}</td><td class="num">${money(r.revenue[k])}</td></tr>`}).join(""); $("resultTables").innerHTML=`<table><tr><th>Produto</th><th class="num">Demanda</th><th class="num">Produzido</th><th class="num">Vendido</th><th class="num">Sobra</th><th class="num">Perdido</th><th class="num">Receita</th></tr>${rows}</table><div class="grid four" style="margin-top:10px"><div class="stat"><div class="label">Tempo de fornadas</div><div class="value">${r.tc.bake} min</div></div><div class="stat"><div class="label">Tempo de setup</div><div class="value ${r.tc.setup>0?'warn':''}">${r.tc.setup} min</div></div><div class="stat"><div class="label">Tempo total / útil</div><div class="value ${r.feasible?'ok':'bad'}">${r.tc.total} / ${Math.round(usefulOvenTime())} min</div></div><div class="stat"><div class="label">Utilização planejada</div><div class="value">${pct(r.utilization)}</div></div></div><table style="margin-top:10px"><tr><th>DRE estimada</th><th class="num">Valor</th></tr><tr><td>Receita de vendas</td><td class="num">${money(r.totalRevenue)}</td></tr><tr><td>(-) Custo variável da produção</td><td class="num">${money(r.totalVariable)}</td></tr><tr><td>(-) Custo de setup</td><td class="num">${money(r.setupCost)}</td></tr><tr><td>(-) Ajustes de produção parcial</td><td class="num">${money(r.partialAdjust)}</td></tr><tr><td>(-) Custo fixo da rodada</td><td class="num">${money(state.fixedCost)}</td></tr><tr><td><b>Resultado operacional estimado</b></td><td class="num ${r.result>=0?'ok':'bad'}"><b>${money(r.result)}</b></td></tr></table>`;}
+  function showPlanMessage(msg,cls="warn"){$("planMessage").innerHTML=msg; $("planMessage").className=`alert ${cls}`;}
+  function renderTimeline(activeIndex=-1){const r=state.last; if(!r||!r.tc.steps.length){$("timeline").innerHTML='<span class="tiny">Monte um plano para ver a linha do tempo.</span>';return;} $("timeline").innerHTML=r.tc.steps.map((s,i)=>`<span class="step ${s.kind==='setup'?'setup':''} ${i<activeIndex?'done':''} ${i===activeIndex?'active':''}">${s.label} · ${s.minutes}min</span>`).join("");}
+  function updateOvenTemp(target,off=false){if(state.tempTimer){clearInterval(state.tempTimer);state.tempTimer=null;} if(off){$("ovenTemp").textContent="--°C"; $("ovenTarget").textContent="Alvo: --°C";return;} const set=()=>{const delta=[-3,-2,-1,1,2,3][Math.floor(Math.random()*6)]; $("ovenTemp").textContent=`${target+delta}°C`; $("ovenTarget").textContent=`Alvo: ${target}°C · variação visual sem impacto`;}; set(); state.tempTimer=setInterval(set,900);}
+  async function simulate(){const r=calculate(); if(!r.feasible||!r.materialOK||!r.tc.steps.length)return; state.simComplete=false; state.leftoverChoice=null; $("leftoverDecision").style.display="none"; $("simulateBtn").disabled=true; $("newRoundBtn").disabled=true; for(let i=0;i<r.tc.steps.length;i++){const step=r.tc.steps[i]; renderTimeline(i); if(step.kind==="setup"){await runSetup(step);}else{updateOvenTemp(step.temp); $("simStage").textContent=step.label; $("simDetail").textContent=`Temperatura alvo: ${step.temp}°C | Tempo operacional: ${step.minutes} min | Simulação: ${step.minutes} s.`; await animateProgress(step.minutes);}} if(state.tempTimer){clearInterval(state.tempTimer);state.tempTimer=null;} $("ovenTemp").textContent="--°C"; $("ovenTarget").textContent="Processo concluído"; renderTimeline(r.tc.steps.length); $("simStage").textContent="Plano concluído"; $("simDetail").textContent=`Tempo total: ${r.tc.total} min. Defina o destino das sobras para liberar o relatório.`; $("simProgress").style.width="100%"; state.simComplete=true; $("leftoverDecision").style.display="block";}
+  function runSetup(step){return new Promise(resolve=>{let elapsed=0; const from=step.tempFrom,to=step.tempTo; $("simStage").textContent=step.label; const t=setInterval(()=>{elapsed+=.1; const p=Math.min(1,elapsed/step.minutes), current=Math.round(from+(to-from)*p); $("ovenTemp").textContent=`${current}°C`; $("ovenTarget").textContent=`Ajustando para ${to}°C`; $("simDetail").textContent=`Setup: forno ocupado, sem gerar produto. Tempo operacional: ${step.minutes} min.`; $("simProgress").style.width=`${p*100}%`; if(p>=1){clearInterval(t);resolve();}},100);});}
+  function animateProgress(seconds){return new Promise(resolve=>{let elapsed=0; $("simProgress").style.width="0%"; const t=setInterval(()=>{elapsed+=.1; $("simProgress").style.width=`${Math.min(100,elapsed/seconds*100)}%`; if(elapsed>=seconds){clearInterval(t); resolve();}},100);});}
+  function decideLeftover(type){const r=state.last; const left=r.leftoverTotal; r.leftoverChoice=type; r.reuseRevenue=type==='crumb'?left*.10:0; r.resultFinal=r.result+r.reuseRevenue; $("reportBtn").disabled=false; $("newRoundBtn").disabled=false; $("leftoverDecision").style.display="none"; $("simDetail").textContent=type==='crumb'?`Sobras transformadas em farinha de rosca. Ganho simbólico: ${money(r.reuseRevenue)}.`:"Sobras descartadas. Sem receita adicional.";}
+  function diagnostic(r){const msgs=[]; msgs.push(`<p><b>Capacidade:</b> o plano usou ${pct(r.utilization)} da capacidade útil do forno. Compare o tempo produtivo com o tempo de setup e o tempo ocioso.</p>`); msgs.push(`<p><b>Teoria das Restrições:</b> o forno é o recurso crítico. A turma deve calcular qual produto gera melhor contribuição em relação ao tempo de forno.</p>`); if(r.tc.setup>state.setupMinutes)msgs.push(`<p><b>Sequenciamento:</b> houve ${r.tc.setup/state.setupMinutes} mudanças de temperatura. Agrupar fornadas por temperatura reduz setup e libera capacidade.</p>`); else if(r.tc.setup===state.setupMinutes)msgs.push(`<p><b>Sequenciamento:</b> houve uma mudança de temperatura. A sequência está razoável, mas ainda consome tempo sem produzir.</p>`); else msgs.push(`<p><b>Sequenciamento:</b> não houve troca de temperatura. O plano evitou perda de capacidade com setup.</p>`); if(r.partialCount>0)msgs.push(`<p><b>Produção parcial:</b> foi usada como exceção gerencial. Ela reduziu possível sobra, mas elevou o custo variável e gerou custo de ajuste.</p>`); if(r.leftoverTotal>0)msgs.push(`<p><b>Produção por lote:</b> houve sobra de ${r.leftoverTotal} pães. A sobra mostra que produzir por lote pode gerar custo sem receita.</p>`); if(r.lostTotal>0)msgs.push(`<p><b>Demanda perdida:</b> ${r.lostTotal} unidades previstas não foram atendidas. Isso pode indicar decisão conservadora, limitação de capacidade ou priorização inadequada do mix.</p>`); msgs.push(`<p><b>MRP:</b> a compra por lote deve ser comparada com a necessidade líquida. Comprar a mais gera estoque e capital parado; comprar a menos bloqueia a produção.</p>`); msgs.push(r.resultFinal>=0?`<p><b>Resultado:</b> a DRE ficou positiva, mas a decisão ainda deve ser analisada por margem, sobra, demanda perdida e uso do forno.</p>`:`<p><b>Resultado:</b> a DRE ficou negativa. A margem gerada não cobriu custos variáveis, setup, produção parcial e custo fixo.</p>`); return msgs.join("");}
+  function dreHTML(r){return `<table><tr><th>DRE simplificada</th><th class="num">Valor</th></tr><tr><td>Receita com pães vendidos</td><td class="num">${money(r.totalRevenue)}</td></tr><tr><td>(+) Ganho simbólico com reaproveitamento</td><td class="num">${money(r.reuseRevenue||0)}</td></tr><tr><td><b>Receita total</b></td><td class="num"><b>${money(r.totalRevenue+(r.reuseRevenue||0))}</b></td></tr><tr><td>(-) Custos variáveis da produção</td><td class="num">${money(r.totalVariable)}</td></tr><tr><td>(-) Custo de setup</td><td class="num">${money(r.setupCost)}</td></tr><tr><td>(-) Custo adicional de produção parcial</td><td class="num">${money(r.partialAdjust)}</td></tr><tr><td>(-) Custos fixos da rodada</td><td class="num">${money(state.fixedCost)}</td></tr><tr><td><b>Resultado operacional</b></td><td class="num ${(r.resultFinal||r.result)>=0?'ok':'bad'}"><b>${money(r.resultFinal||r.result)}</b></td></tr></table>`;}
+  function mrpReportHTML(r){let h='<table><tr><th>Insumo</th><th class="num">Necessário</th><th class="num">Estoque inicial</th><th class="num">Compra</th><th class="num">Estoque final</th></tr>'; Object.entries(LOTS).forEach(([k,l])=>{const buy=purchaseQty(k), final=state.stock[k]+buy-r.req.need[k]; h+=`<tr><td>${l.label}</td><td class="num">${fmt(r.req.need[k],k==='yeast'||k==='pack'?0:1)} ${l.unit}</td><td class="num">${fmt(state.stock[k],k==='yeast'||k==='pack'?0:1)} ${l.unit}</td><td class="num">${fmt(buy,k==='yeast'||k==='pack'?0:1)} ${l.unit}</td><td class="num">${fmt(final,k==='yeast'||k==='pack'?0:1)} ${l.unit}</td></tr>`}); return h+`</table><p class="tiny">Compra planejada em lotes: ${money(r.purchaseCost)}. Este valor afeta o caixa; na DRE, o custo variável representa o consumo produtivo do período.</p>`;}
+  function showReport(){const r=state.last;if(!state.simComplete||!r.leftoverChoice){return;} r.resultFinal=r.result+(r.reuseRevenue||0); const items=[["Cenário",scenarios[state.scenarioIndex].name],["Plano",`${r.req.produced.frances} francês · ${r.req.produced.doce} doce`],["Sequência",`${state.sequence.length} etapa(s)`],["Tempo total",`${r.tc.total} min`],["Capacidade útil",`${Math.round(usefulOvenTime())} min`],["Utilização",pct(r.utilization)],["Receita",money(r.totalRevenue)],["Compra em lotes",money(r.purchaseCost)],["Custo fixo",money(state.fixedCost)],["Resultado",money(r.resultFinal)],["Demanda perdida",`${r.lostTotal} un.`],["Sobras",`${r.leftoverTotal} un.`]]; $("reportGrid").innerHTML=items.map(([l,v])=>`<div class="report-item"><div class="label">${l}</div><div class="value small">${v}</div></div>`).join(""); $("dreBox").innerHTML=dreHTML(r); $("diagnosticText").innerHTML=diagnostic(r); $("mrpReport").innerHTML=mrpReportHTML(r); $("printArea").innerHTML=printHTML(r); $("reportModal").classList.add("show");}
+  function printHTML(r){return `<h1>Fornada Estratégica — Relatório Gerencial</h1><p class="small">Sistema desenvolvido para a disciplina Gestão de Operações e Serviços, Professor Me. Luan Sodré da UNIVALE.</p><h2>Resumo da rodada</h2><table><tr><td>Cenário</td><td>${scenarios[state.scenarioIndex].name}</td></tr><tr><td>Sequência</td><td>${state.sequence.map(s=>stepInfo(s).label).join(' → ')}</td></tr><tr><td>Tempo total</td><td>${r.tc.total} min</td></tr><tr><td>Capacidade útil</td><td>${Math.round(usefulOvenTime())} min</td></tr><tr><td>Resultado operacional</td><td>${money(r.resultFinal)}</td></tr></table><h2>DRE simplificada</h2>${dreHTML(r)}<h2>Produção e atendimento</h2>${document.querySelector('#resultTables table').outerHTML}<h2>MRP e estoque</h2>${mrpReportHTML(r)}<h2>Feedbacks de Gestão de Operações e Serviços</h2>${diagnostic(r)}`;}
+  function closeRound(){const r=state.last;if(!state.simComplete||!r.leftoverChoice)return; Object.keys(LOTS).forEach(k=>{state.stock[k]=Math.max(0,state.stock[k]+purchaseQty(k)-r.req.need[k]);}); state.cash += (r.totalRevenue+(r.reuseRevenue||0))-r.purchaseCost-state.fixedCost-r.setupCost-r.partialAdjust; r.resultFinal=r.result+(r.reuseRevenue||0); state.lastClosed=JSON.parse(JSON.stringify(r)); state.round++; state.scenarioIndex=(state.scenarioIndex+1)%scenarios.length; state.sequence=[]; state.purchaseLots={flour:0,yeast:0,filling:0,pack:0}; state.partialAuthorized=false; state.simComplete=false; state.leftoverChoice=null; $("partialBox").style.display="none"; $("reportBtn").disabled=true; $("newRoundBtn").disabled=true; $("leftoverDecision").style.display="none"; $("simStage").textContent="Aguardando simulação"; $("simDetail").textContent="1 minuto real da operação equivale a 1 segundo na animação."; $("simProgress").style.width="0%"; applyScenario();}
+  function authorize(){if($("authPassword").value==="1234"){state.partialAuthorized=true; $("partialBox").style.display="block"; $("authModal").classList.remove("show"); $("authPassword").value=""; showPlanMessage("Produção parcial autorizada apenas para esta rodada. Use com cuidado: ela aumenta custos e reduz eficiência.","warn");}else{$("authMsg").textContent="Senha incorreta. Autorização negada.";}}
+  document.addEventListener("click",e=>{const add=e.target.getAttribute&&e.target.getAttribute("data-add"); if(add)addStep({product:add,partial:false}); const rem=e.target.getAttribute&&e.target.getAttribute("data-remove"); if(rem!==null){state.sequence.splice(Number(rem),1); state.simComplete=false; $("reportBtn").disabled=true; calculate();}});
+  document.addEventListener("input",e=>{const k=e.target.getAttribute&&e.target.getAttribute("data-buy"); if(k){state.purchaseLots[k]=Math.max(0,parseInt(e.target.value||0,10)); state.simComplete=false; $("reportBtn").disabled=true; calculate();}});
+  $("authorizePartialBtn").onclick=()=>{$("authModal").classList.add("show");$("authMsg").textContent=""}; $("confirmAuthBtn").onclick=authorize; $("closeAuthBtn").onclick=()=>$("authModal").classList.remove("show");
+  $("addPartialBtn").onclick=()=>{if(!state.partialAuthorized)return; const product=$("partialProduct").value, max=PRODUCTS[product].batch-1; let qty=Math.max(1,Math.min(max,parseInt($("partialQty").value||1,10))); $("partialQty").value=qty; addStep({product,partial:true,qty});};
+  $("clearSeqBtn").onclick=()=>{state.sequence=[];state.simComplete=false;$("reportBtn").disabled=true;$("leftoverDecision").style.display="none";calculate();}; $("simulateBtn").onclick=simulate; $("discardBtn").onclick=()=>decideLeftover('discard'); $("crumbBtn").onclick=()=>decideLeftover('crumb'); $("reportBtn").onclick=showReport; $("closeReportBtn").onclick=()=>$("reportModal").classList.remove("show"); $("printBtn").onclick=()=>window.print(); $("newRoundBtn").onclick=closeRound;
+  applyScenario();
 })();
 </script>
 </body>
